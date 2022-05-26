@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_getx_provider_bloc/provider/counterProvider.dart';
+import 'package:flutter_getx_provider_bloc/screens/homescreen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -8,17 +10,6 @@ void main() {
       home: MyApp(),
     ),
   ));
-}
-
-class CounterProvider extends ChangeNotifier {
-  int _counter = 100;
-
-  int get counter => _counter;
-
-  void add() {
-    _counter++;
-    notifyListeners();
-  }
 }
 
 class MyApp extends StatelessWidget {
@@ -45,9 +36,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: Center(
         child: Container(
-          child: Text(
-            context.watch<CounterProvider>()._counter.toString(),
-            style: TextStyle(color: Colors.red, fontSize: 100),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                context.watch<CounterProvider>().counter.toString(),
+                style: TextStyle(color: Colors.red, fontSize: 100),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                },
+                child: Text("Go HomeScreen"),
+              )
+            ],
           ),
         ),
       ),
