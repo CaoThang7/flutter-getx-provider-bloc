@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_getx_provider_bloc/provider/counterProvider.dart';
+import 'package:flutter_getx_provider_bloc/provider/settingProvider.dart';
 import 'package:flutter_getx_provider_bloc/screens/homescreen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main(List<String> args) {
   runApp(ChangeNotifierProvider(
-    create: (_) => CounterProvider(),
+    create: (context) => SettingProvider(),
     child: MaterialApp(
       home: MyApp(),
     ),
@@ -18,11 +19,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "My App",
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: MyHomePage(),
+      home: MySettings(),
     );
   }
 }
 
+// class using provider (context.watch,context.read)
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -62,6 +64,46 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
       ),
+    );
+  }
+}
+
+// class using provider (Consumer)
+class MySettings extends StatefulWidget {
+  @override
+  State<MySettings> createState() => _MySettingsState();
+}
+
+class _MySettingsState extends State<MySettings> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<SettingProvider>(
+      builder: (context, mySettings, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("My Settings"),
+          ),
+          body: Center(
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "${mySettings.text}",
+                    style: TextStyle(color: Colors.red, fontSize: 100),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      mySettings.changeText();
+                    },
+                    child: Text("Change Text"),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
