@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_getx_provider_bloc/provider/brightnessProvider.dart';
 import 'package:flutter_getx_provider_bloc/provider/counterProvider.dart';
+import 'package:flutter_getx_provider_bloc/provider/infoProvider.dart';
 import 'package:flutter_getx_provider_bloc/provider/settingProvider.dart';
 import 'package:flutter_getx_provider_bloc/screens/homescreen.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main(List<String> args) {
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (_) => GioiTinh()),
+      ChangeNotifierProvider(create: (_) => BangCap()),
       ChangeNotifierProvider(create: (_) => ChangeBrightness()),
       ChangeNotifierProvider(create: (_) => CounterProvider()),
     ],
@@ -21,12 +24,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "My App",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          brightness: context.watch<ChangeBrightness>().isDark
-              ? Brightness.dark
-              : Brightness.light,
-          primarySwatch: Colors.blue),
-      home: MyHomePage(),
+      // theme: ThemeData(
+      //     brightness: context.watch<ChangeBrightness>().isDark
+      //         ? Brightness.dark
+      //         : Brightness.light,
+      //     primarySwatch: Colors.blue),
+      home: Infomation(),
     );
   }
 }
@@ -122,6 +125,63 @@ class _MySettingsState extends State<MySettings> {
           ),
         );
       },
+    );
+  }
+}
+
+// class using provider (Consumer2)
+class Infomation extends StatefulWidget {
+  @override
+  State<Infomation> createState() => _InfomationState();
+}
+
+class _InfomationState extends State<Infomation> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Radio Demo'),
+      ),
+      body: Consumer2<GioiTinh, BangCap>(
+        builder: (context, infoGioiTinh, infoBangCap, child) {
+          return Column(
+            children: [
+              RadioListTile<gioi_tinh?>(
+                value: gioi_tinh.nam,
+                title: Text("Nam"),
+                secondary: Icon(Icons.male),
+                groupValue: infoGioiTinh.gioiTinh,
+                onChanged: (value) {
+                  infoGioiTinh.gioiTinh = value;
+                },
+              ),
+              RadioListTile<gioi_tinh?>(
+                  value: gioi_tinh.nu,
+                  title: Text('Nu'),
+                  secondary: Icon(Icons.female),
+                  groupValue: infoGioiTinh.gioiTinh,
+                  onChanged: (value) {
+                    infoGioiTinh.gioiTinh = value;
+                  }),
+              Text('Bang Cap'),
+              RadioListTile<bang_cap?>(
+                  value: bang_cap.caoDang,
+                  title: Text('Cao Dang'),
+                  groupValue: infoBangCap.bangCap,
+                  onChanged: (value) {
+                    infoBangCap.bangCap = value;
+                  }),
+              RadioListTile<bang_cap?>(
+                  value: bang_cap.daiHoc,
+                  title: Text('Dai Hoc'),
+                  groupValue: infoBangCap.bangCap,
+                  onChanged: (value) {
+                    infoBangCap.bangCap = value;
+                  }),
+            ],
+          );
+        },
+      ),
     );
   }
 }
