@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_getx_provider_bloc/provider/brightnessProvider.dart';
 import 'package:flutter_getx_provider_bloc/provider/counterProvider.dart';
 import 'package:flutter_getx_provider_bloc/provider/settingProvider.dart';
 import 'package:flutter_getx_provider_bloc/screens/homescreen.dart';
 import 'package:provider/provider.dart';
 
-void main(List<String> args) {
-  runApp(ChangeNotifierProvider(
-    create: (context) => SettingProvider(),
-    child: MaterialApp(
-      home: MyApp(),
-    ),
+void main() {
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ChangeBrightness()),
+      ChangeNotifierProvider(create: (_) => CounterProvider()),
+    ],
+    child: MyApp(),
   ));
 }
 
@@ -18,8 +20,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "My App",
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: MySettings(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          brightness: context.watch<ChangeBrightness>().isDark
+              ? Brightness.dark
+              : Brightness.light,
+          primarySwatch: Colors.blue),
+      home: MyHomePage(),
     );
   }
 }
@@ -36,6 +43,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Switch(
+            value: context.watch<ChangeBrightness>().isDark,
+            onChanged: (newValue) {
+              Provider.of<ChangeBrightness>(context, listen: false)
+                  .setBrightness(newValue);
+            },
+          )
+        ],
+      ),
       body: Center(
         child: Container(
           child: Column(
