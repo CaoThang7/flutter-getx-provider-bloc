@@ -4,6 +4,7 @@ import 'package:flutter_getx_provider_bloc/provider/counterProvider.dart';
 import 'package:flutter_getx_provider_bloc/provider/infoProvider.dart';
 import 'package:flutter_getx_provider_bloc/provider/settingProvider.dart';
 import 'package:flutter_getx_provider_bloc/screens/homescreen.dart';
+import 'package:flutter_getx_provider_bloc/screens/productscreen.dart';
 import 'package:provider/provider.dart';
 
 void main(List<String> args) {
@@ -178,6 +179,15 @@ class _InfomationState extends State<Infomation> {
                   onChanged: (value) {
                     infoBangCap.bangCap = value;
                   }),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProductScreen()),
+                  );
+                },
+                child: Text("Xem san pham"),
+              )
             ],
           );
         },
